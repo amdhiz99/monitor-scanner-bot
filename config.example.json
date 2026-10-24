@@ -1,0 +1,164 @@
+{
+  "bot_token": "ISI_TOKEN_DARI_BOTFATHER",
+  "chat_id": "ISI_NUMERIC_CHAT_ID",
+  "timezone_label": "WIB",
+  "monitor": {
+    "cpu": {
+      "warn": 80,
+      "crit": 95
+    },
+    "ram": {
+      "warn": 80,
+      "crit": 95
+    },
+    "disk": {
+      "warn": 80,
+      "crit": 90
+    },
+    "load_per_core": {
+      "warn": 1.0,
+      "crit": 2.0
+    },
+    "temperature": {
+      "warn": 70,
+      "crit": 85
+    },
+    "services": [
+      "nginx",
+      "apache2",
+      "mysql",
+      "mariadb",
+      "postgresql",
+      "ssh",
+      "docker"
+    ],
+    "services_critical": [
+      "ssh"
+    ],
+    "watch_ports": [
+      22,
+      80,
+      443,
+      3306,
+      5432
+    ],
+    "exclude_mounts": [
+      "/snap",
+      "/boot/efi",
+      "/mnt/wsl",
+      "/mnt/host",
+      "/init",
+      "/dev",
+      "/run",
+      "/sys",
+      "/proc"
+    ],
+    "top_processes": 0
+  },
+  "server_scan": {
+    "nmap_enabled": true,
+    "nmap_profile": "top200",
+    "nmap_extra_ports": "1-1024,3306,5432,6379,8080,8443,9200,27017",
+    "socket_fallback_ports": [
+      21,
+      22,
+      23,
+      25,
+      53,
+      80,
+      110,
+      143,
+      443,
+      445,
+      993,
+      995,
+      1433,
+      1521,
+      2375,
+      3000,
+      3306,
+      3389,
+      5432,
+      5900,
+      6379,
+      8000,
+      8080,
+      8443,
+      9200,
+      27017
+    ],
+    "timeout": 300,
+    "check_updates": true,
+    "check_ssh_config": true,
+    "risky_ports": {
+      "21": "high",
+      "23": "critical",
+      "25": "medium",
+      "445": "high",
+      "1433": "high",
+      "3306": "high",
+      "3389": "critical",
+      "5432": "high",
+      "5900": "high",
+      "6379": "critical",
+      "9200": "high",
+      "27017": "critical",
+      "2375": "critical",
+      "11211": "critical"
+    }
+  },
+  "domain_scan": {
+    "subdomains": [
+      "contoh.com"
+    ],
+    "timeout": 10,
+    "max_redirects": 5,
+    "cert_warn_days": 14,
+    "cert_crit_days": 7,
+    "check_security_headers": true,
+    "weak_ciphers": [
+      "3DES",
+      "DES-CBC3",
+      "RC4",
+      "NULL",
+      "EXPORT",
+      "MD5",
+      "aNULL",
+      "eNULL"
+    ]
+  },
+  "telegram": {
+    "chunk_size": 3800,
+    "request_timeout": 20
+  },
+  "deep_scan": {
+    "enabled": true,
+    "nvd": {
+      "enabled": true,
+      "api_key": "",
+      "max_products": 8,
+      "recent_months": 12,
+      "cache_hours": 24,
+      "timeout": 25,
+      "recent_windows": 2,
+      "recent_products": [
+        "php",
+        "nodejs",
+        "nginx"
+      ]
+    },
+    "nuclei": {
+      "enabled": true,
+      "path": "nuclei",
+      "severity": "critical,high,medium",
+      "tags": "cve,owasp,exposures,misconfig",
+      "rate_limit": 80,
+      "request_timeout": 8,
+      "timeout": 420,
+      "max_hosts": 3
+    },
+    "safe_exploit": true,
+    "cron_deep": true,
+    "cve_watch": []
+  }
+}

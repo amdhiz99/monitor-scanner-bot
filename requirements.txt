@@ -1,0 +1,9 @@
+# Tidak ada dependensi Python eksternal — seluruh modul memakai standard library.
+# Bot memakai urllib untuk Telegram Bot API, jadi python-telegram-bot TIDAK diperlukan.
+#
+# Yang perlu tersedia di sistem (opsional tapi disarankan):
+#   nmap      — pemindaian port lebih akurat (fallback: socket Python)
+#   openssl   — detail sertifikat & probe protokol TLS lama
+#   iproute2  — perintah `ss` untuk daftar port/koneksi
+#
+# Python minimum: 3.8 (diuji pada 3.14)

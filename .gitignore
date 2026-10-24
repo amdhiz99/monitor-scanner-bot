@@ -1,0 +1,9 @@
+# Rahasia
+.env
+config.json
+
+# Output
+log/
+reports/
+__pycache__/
+*.pyc
