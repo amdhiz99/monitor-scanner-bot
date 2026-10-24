@@ -1,0 +1,40 @@
+[Unit]
+Description=Scanner Bot — monitoring & security scan (Telegram)
+Documentation=file:///opt/scanner-bot/docs/INSTALL-SERVER.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=scanner
+Group=scanner
+WorkingDirectory=/opt/scanner-bot
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+# HOME dipakai bersama cron agar cache/template nuclei tidak terunduh dua kali
+Environment=HOME=/opt/scanner-bot
+EnvironmentFile=-/opt/scanner-bot/.env
+ExecStart=/usr/bin/python3 /opt/scanner-bot/bot.py
+Restart=always
+RestartSec=10
+TimeoutStopSec=20
+KillSignal=SIGTERM
+
+# Pengerasan: bot menerima input dari internet, jangan beri akses lebih dari perlu.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+# log/ & reports/ harus tetap bisa ditulis
+ReadWritePaths=/opt/scanner-bot/log /opt/scanner-bot/reports
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=scanner-bot
+
+[Install]
+WantedBy=multi-user.target

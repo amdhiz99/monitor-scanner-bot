@@ -1,0 +1,10 @@
+# /etc/cron.d/scanner-bot — scan harian Modul A → B → C
+# 01:00 WIB (server dengan timezone Asia/Jakarta). Untuk server UTC: 0 18 * * *
+# Format cron.d punya kolom user setelah jadwal.
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+MAILTO=""
+# HOME sama dengan service agar template nuclei dipakai bersama
+HOME=/opt/scanner-bot
+
+0 1 * * * root cd /opt/scanner-bot && /usr/bin/python3 cron_scan.py >> log/cron.log 2>&1

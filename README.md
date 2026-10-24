@@ -36,6 +36,12 @@ scanner-vuln-deepskv4fl/
 │   ├── monitor.py         # MODUL A
 │   ├── secscan.py         # MODUL B (server & domain)
 │   └── vulnscan.py        # MODUL C (CVE + OWASP + verifikasi read-only)
+├── deploy/
+│   ├── install.sh         # instalasi server sekali jalan (idempoten, ada --check)
+│   ├── scanner-bot.service# systemd unit (user scanner, hardening)
+│   └── scanner-bot.cron   # /etc/cron.d entry 01:00
+├── docs/
+│   └── INSTALL-SERVER.md  # panduan instalasi di server (Ubuntu/Debian)
 ├── log/                   # monitor.log, secscan.log, bot.log, cron.log
 └── reports/               # arsip tiap laporan (txt, timestamp)
 ```
@@ -319,6 +325,38 @@ python3 cron_scan.py --skip-deep                        # cron tanpa Modul C
 Cron 01:00 menjalankan Modul C otomatis (setelah A dan B) bila
 `deep_scan.enabled` dan `cron_deep` bernilai true. Estimasi: 60–180 detik
 dengan cache NVD hangat.
+
+## 5b. Instalasi di server (produksi)
+
+Panduan lengkap: **docs/INSTALL-SERVER.md**. Ringkasnya:
+
+```bash
+# di server Ubuntu/Debian, dari direktori repo
+sudo ./deploy/install.sh --check      # cek prasyarat tanpa mengubah apa pun
+sudo ./deploy/install.sh              # pasang deps, user, service, cron, nuclei
+sudo nano /opt/scanner-bot/config.json # isi bot_token, chat_id, subdomains
+sudo systemctl restart scanner-bot
+
+# uji kirim ke Telegram
+sudo -u scanner python3 /opt/scanner-bot/modules/monitor.py --send
+```
+
+Yang dipasang script:
+
+| Komponen | Lokasi | Catatan |
+|---|---|---|
+| kode | `/opt/scanner-bot` | clone repo, pemilik user `scanner` |
+| paket | apt | python3, git, nmap, openssl, iproute2, update-notifier-common |
+| nuclei | `/usr/local/bin` | opsional (`--no-nuclei`), template di `/opt/scanner-bot/nuclei-templates` |
+| bot | `scanner-bot.service` | systemd, user `scanner`, auto-restart, hardening |
+| scan harian | `/etc/cron.d/scanner-bot` | 01:00 waktu server, jalan sebagai root |
+| config | `config.json` | dibuat dari contoh, `chmod 600` |
+
+Penting saat pindah dari WSL ke server:
+- **pakai bot token berbeda per host** — token sama di dua mesin = `409 Conflict`
+- cron sebagai `root` supaya `sshd_config` & update apt terbaca; bot tetap user `scanner`
+- sesuaikan `monitor.exclude_mounts` (buang path WSL) dan `monitor.services`
+- server UTC: ubah cron ke `0 18 * * *`
 
 ## 6. Isi laporan
 
