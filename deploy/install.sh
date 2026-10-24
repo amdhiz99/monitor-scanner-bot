@@ -170,16 +170,40 @@ ok "/etc/cron.d/scanner-bot (01:00 waktu server)"
 # ----------------------------------------------------------------- uji cepat
 step "Uji cepat modul (tanpa kirim ke Telegram)"
 cd "$APP_DIR"
-if sudo -u "$APP_USER" "$PYTHON_BIN" -m modules.monitor >/dev/null 2>&1; then ok "Modul A jalan"; else bad "Modul A gagal"; fi
-if sudo -u "$APP_USER" "$PYTHON_BIN" -m modules.secscan server --target 127.0.0.1 >/dev/null 2>&1; then ok "Modul B server jalan"; else warn "Modul B server bermasalah"; fi
-if sudo -u "$APP_USER" "$PYTHON_BIN" -m modules.vulnscan --local --no-nuclei >/dev/null 2>&1; then ok "Modul C jalan"; else warn "Modul C bermasalah"; fi
+# Modul keluar dengan 2 bila menemukan risiko kritikal — itu hasil normal, bukan gagal.
+run_module() {  # $1=label, sisa=argv
+  local label="$1"; shift
+  sudo -u "$APP_USER" "$PYTHON_BIN" "$@" >/dev/null 2>&1
+  local rc=$?
+  if [ "$rc" -eq 0 ]; then ok "$label jalan (tanpa temuan kritikal)"
+  elif [ "$rc" -eq 2 ]; then ok "$label jalan (ada temuan kritikal — normal)"
+  else bad "$label gagal (exit $rc)"; return 1; fi
+}
+run_module "Modul A" -m modules.monitor
+run_module "Modul B server" -m modules.secscan server --target 127.0.0.1
+run_module "Modul C" -m modules.vulnscan --local --no-nuclei
+
+# Deteksi token placeholder sebelum menyalakan bot
+PLACEHOLDER=0
+if grep -q "ISI_TOKEN_DARI_BOTFATHER\|ISI_NUMERIC_CHAT_ID" "$APP_DIR/config.json" 2>/dev/null; then
+  PLACEHOLDER=1
+fi
+if grep -q "BOT_TOKEN=" "$APP_DIR/.env" 2>/dev/null; then
+  grep -q "ISI_TOKEN\|TOKEN_ANDA" "$APP_DIR/.env" 2>/dev/null && PLACEHOLDER=1
+fi
 
 systemctl restart scanner-bot
 sleep 3
 if systemctl is-active --quiet scanner-bot; then
   ok "bot aktif (systemd)"
+  if [ "$PLACEHOLDER" -eq 1 ]; then
+    warn "token masih placeholder — bot hidup tapi Telegram menolak (404). Isi config.json lalu restart."
+  fi
 else
   bad "bot tidak aktif — cek: journalctl -u scanner-bot -n 40 --no-pager"
+  if [ "$PLACEHOLDER" -eq 1 ]; then
+    warn "penyebab paling mungkin: bot_token/chat_id di $APP_DIR/config.json belum diisi"
+  fi
 fi
 
 step "Selesai"
