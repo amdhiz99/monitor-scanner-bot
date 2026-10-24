@@ -99,7 +99,7 @@ Isi minimal:
 ```json
 {
   "bot_token": "123456:ABC...",
-  "chat_id": "6162635546",
+  "chat_id": "123456789",
   "domain_scan": { "subdomains": ["barlve.com", "www.barlve.com"] }
 }
 ```
@@ -108,7 +108,7 @@ Bisa juga lewat environment (menang atas `config.json`) — berguna untuk cron/k
 
 ```bash
 export BOT_TOKEN="123456:ABC..."
-export ADMIN_CHAT_ID="6162635546"
+export ADMIN_CHAT_ID="123456789"
 ```
 
 Threshold yang bisa diatur di `monitor`:

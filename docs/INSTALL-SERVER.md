@@ -88,7 +88,7 @@ Isi minimal:
 ```json
 {
   "bot_token": "TOKEN_DARI_BOTFATHER",
-  "chat_id": "6162635546",
+  "chat_id": "123456789",
   "timezone_label": "WIB",
   "domain_scan": { "subdomains": ["barlve.com", "www.barlve.com"] }
 }
@@ -109,7 +109,7 @@ Penting untuk server:
 Token juga bisa lewat `.env` (menang atas `config.json`):
 
 ```bash
-sudo -u scanner sh -c 'printf "BOT_TOKEN=%s\nADMIN_CHAT_ID=%s\n" "123:ABC" "6162635546" > /opt/scanner-bot/.env'
+sudo -u scanner sh -c 'printf "BOT_TOKEN=%s\nADMIN_CHAT_ID=%s\n" "123:ABC" "123456789" > /opt/scanner-bot/.env'
 sudo chmod 600 /opt/scanner-bot/.env
 ```
 
