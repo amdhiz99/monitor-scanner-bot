@@ -14,7 +14,13 @@ Dua modul, satu bot, satu cron:
 Seluruh kode memakai **Python standard library** — tidak perlu `pip install`, termasuk
 untuk bot (pakai `urllib`, bukan `python-telegram-bot`).
 
+- **Deep Scan Kode** (`modules/codescan.py`): memeriksa **kode aplikasi** di server —
+  secret ter-hardcode, pola injeksi (eval/SQL concat/shell), izin `.env`, `.gitignore`,
+  dan dependensi rentan (`npm audit`). Dijalankan otomatis pada menu **4️⃣ Deep Scan**
+  setelah scan CVE/OWASP, path diatur di `deep_scan.code_paths`.
+
 ---
+
 
 ## 1. Struktur proyek
 

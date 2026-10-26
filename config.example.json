@@ -133,6 +133,9 @@
   },
   "deep_scan": {
     "enabled": true,
+    "code_paths": [
+      "/var/www"
+    ],
     "nvd": {
       "enabled": true,
       "api_key": "",

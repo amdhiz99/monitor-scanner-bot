@@ -66,9 +66,8 @@ def main_menu_keyboard() -> dict:
             [{"text": "1️⃣ Monitoring Server", "callback_data": "act:monitor"}],
             [{"text": "2️⃣ Scan Server", "callback_data": "act:server"}],
             [{"text": "3️⃣ Scan Domain", "callback_data": "act:domain"}],
-            [{"text": "4️⃣ Deep Scan (CVE & OWASP)", "callback_data": "act:deep"}],
+            [{"text": "4️⃣ Deep Scan (CVE, OWASP & Kode)", "callback_data": "act:deep"}],
             [
-                {"text": "📋 Domain terpantau", "callback_data": "act:list_domains"},
                 {"text": "ℹ️ Status", "callback_data": "act:status"},
             ],
         ]
@@ -274,6 +273,17 @@ class Bot:
                 text, worst, _ = vulnscan.run_cron_deep(self.cfg)
             log.info("Deep scan via bot: %s → %s", target, worst)
             self.say(text, status_keyboard())
+
+            # lanjutan: deep scan kode aplikasi (whitebox)
+            try:
+                from modules import codescan
+
+                kode_teks, kode_worst = codescan.run_code_scan(self.cfg)
+                log.info("Deep scan kode: %s", kode_worst)
+                self.say(kode_teks, status_keyboard())
+            except Exception as exc:  # noqa: BLE001
+                log.exception("Deep scan kode gagal: %s", exc)
+                self.say(f"⚠️ <b>Deep scan kode gagal</b>\n<code>{exc}</code>", status_keyboard())
         except Exception as exc:  # noqa: BLE001
             log.exception("Deep scan gagal: %s", exc)
             self.say(f"❌ <b>Deep scan gagal</b>\n<code>{exc}</code>", status_keyboard())
