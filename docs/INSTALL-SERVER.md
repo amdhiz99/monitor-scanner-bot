@@ -60,7 +60,7 @@ sudo useradd --system --create-home --shell /usr/sbin/nologin scanner
 sudo mkdir -p /opt/scanner-bot
 sudo chown scanner:scanner /opt/scanner-bot
 
-sudo -u scanner git clone https://github.com/amdhiz99/monitor-scanner-bot.git /opt/scanner-bot
+sudo -u scanner git clone https://github.com/barlve/monitor-scanner-bot.git /opt/scanner-bot
 sudo -u scanner chmod +x /opt/scanner-bot/*.sh
 ```
 

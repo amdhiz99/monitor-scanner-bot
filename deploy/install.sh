@@ -9,7 +9,7 @@ set -euo pipefail
 
 APP_DIR="${APP_DIR:-/opt/scanner-bot}"
 APP_USER="${APP_USER:-scanner}"
-REPO_URL="${REPO_URL:-https://github.com/amdhiz99/monitor-scanner-bot.git}"
+REPO_URL="${REPO_URL:-https://github.com/barlve/monitor-scanner-bot.git}"
 TARGET_TZ="${TARGET_TZ:-Asia/Jakarta}"
 INSTALL_NUCLEI=1
 CHECK_ONLY=0
